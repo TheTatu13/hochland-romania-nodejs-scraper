@@ -1,0 +1,10 @@
+{
+  "id": "10666988",
+  "company": "HOCHLAND ROMANIA SRL",
+  "brand": "Hochland",
+  "status": "activ",
+  "location": ["Bucuresti"],
+  "website": ["https://hochland.ro"],
+  "career": ["https://hochland.ro/cariere/"],
+  "scraperFile": "https://github.com/TheTatu13/hochland-romania-nodejs-scraper/actions/workflows/scrape.yml"
+}
