@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '0 6 * * *'  # Daily at 6 AM
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run without writing to the API (safe test run)'
+        type: boolean
+        default: true
 
 jobs:
   scrape:
@@ -27,7 +32,13 @@ jobs:
         run: npm install
 
       - name: Ensure company exists in company core
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true'
         run: |
+          MANAGE_COMPANY=$(jq -r '.manageCompany' scraper/config/scraper.json)
+          if [ "$MANAGE_COMPANY" != "true" ]; then
+            echo "manageCompany=false — skipping company-core upsert"
+            exit 0
+          fi
           CIF=$(jq -r '.id' scraper/config/company.json)
           LEGAL_NAME=$(jq -r '.company' scraper/config/company.json)
           BRAND=$(jq -r '.brand' scraper/config/company.json)
@@ -82,7 +93,12 @@ jobs:
           cp test-report.html docs/test-results/pre-scrape-integration.html || true
 
       - name: Run scraper
-        run: npm run scrape
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            npm run scrape:dry-run
+          else
+            npm run scrape
+          fi
           
       - name: Check for new jobs
         run: |

@@ -69,6 +69,15 @@ function levenshtein(a, b) {
   return d[m][n];
 }
 
+// Exact-only tier, tried first across every item in a run so a shared slug
+// always goes to its rightful exact match before any fuzzy match gets a turn
+// (see the two-pass resolution in scrapeCareers).
+function matchSitemapUrlExact(title, sitemapEntries) {
+  const slug = slugify(title);
+  const exact = sitemapEntries.find((e) => e.slug === slug);
+  return exact ? exact.url : null;
+}
+
 // Pick the sitemap URL whose slug best matches a listing title. Sitemaps drift
 // in the real world (typos, a "-2" disambiguation suffix), so match
 // exact → bounded prefix → small edit distance, else return null.
@@ -291,26 +300,55 @@ async function scrapeCareers() {
   }
 
   if (listingItems.length > 0) {
-    for (const item of listingItems) {
-      // The real <a href> scraped from the page is ground truth -- prefer it
-      // over guessing. Sites whose permalink needs an ID the title can't
-      // reproduce (e.g. "/jobs/jr133930/software-architect/") silently 404
-      // under the guess, which nothing else catches until the live
-      // validation just before upload.
-      const url = item.url
-        ? new URL(item.url, scraperConfig.sources.listing).toString()
-        : matchSitemapUrl(item.title, sitemapEntries) ||
-          `${scraperConfig.sources.jobArchive}${slugify(item.title)}/`;
+    // Resolve every item's URL in two passes so an exact sitemap match
+    // always wins a shared slug over a fuzzy one, regardless of which title
+    // the listing happens to put first (see matchSitemapUrlExact above):
+    //   pass 1 -- the scraped <a href> (ground truth) or an EXACT sitemap
+    //             slug match; claim those URLs immediately.
+    //   pass 2 -- only the items pass 1 couldn't resolve try the fuzzy
+    //             fallback, and only win a URL no exact match already claimed.
+    // Without this ordering, a longer, unrelated title that fuzzy-matches an
+    // earlier sitemap entry could steal that URL before the real exact-match
+    // job gets a turn -- two jobs sharing one URL means one silently
+    // overwrites the other in SOLR.
+    const resolved = {};
+    const claimedSitemapUrls = new Set();
+    const unresolved = [];
+    listingItems.forEach((item, i) => {
+      if (item.url) {
+        resolved[i] = new URL(item.url, scraperConfig.sources.listing).toString();
+        return;
+      }
+      const exact = matchSitemapUrlExact(item.title, sitemapEntries);
+      if (exact) {
+        resolved[i] = exact;
+        claimedSitemapUrls.add(exact);
+      } else {
+        unresolved.push(i);
+      }
+    });
+
+    for (const i of unresolved) {
+      const fuzzy = matchSitemapUrl(listingItems[i].title, sitemapEntries);
+      if (fuzzy && !claimedSitemapUrls.has(fuzzy)) {
+        resolved[i] = fuzzy;
+        claimedSitemapUrls.add(fuzzy);
+      } else {
+        resolved[i] = `${scraperConfig.sources.jobArchive}${slugify(listingItems[i].title)}/`;
+      }
+    }
+
+    listingItems.forEach((item, i) => {
       const mappedCity = item.locatie ? LOCATIE_TO_CITY[item.locatie] : null;
       jobs.push({
-        url,
+        url: resolved[i],
         title: item.title,
         location: mappedCity ? [mappedCity] : locationFromTitle(item.title),
         workmode: scraperConfig.defaultWorkmode,
         expirationdate: item.expirationdate,
         source: CAREERS_SOURCE
       });
-    }
+    });
   } else if (sitemapEntries.length > 0) {
     // Listing unreachable — fall back to sitemap-only, deriving titles from slugs.
     console.log("  Falling back to sitemap-only (titles from slugs)");
@@ -482,7 +520,7 @@ async function dropDeadUrls(jobs) {
 // MAIN
 // ============================================================================
 
-async function main() {
+async function main(dryRun = process.argv.includes("--dry-run")) {
   try {
     fs.mkdirSync("scraper", { recursive: true });
 
@@ -500,12 +538,19 @@ async function main() {
     console.log(`Found ${existingCount} existing jobs in SOLR (${ownExistingUrls.size} ours)`);
 
     console.log("=== Step 2: Validate company via ANAF ===");
-    const { company, cif, address, status } = await validateAndGetCompany();
+    const { company, cif, address, status } = await validateAndGetCompany(dryRun);
     COMPANY_NAME = company;
     if (status === 'inactive') {
-      console.log("Company is INACTIVE — removing only our own jobs, skipping scrape.");
-      for (const url of ownExistingUrls) {
-        try { await deleteJobByUrl(url); } catch (e) { console.warn(`  delete failed: ${url} — ${e.message}`); }
+      if (dryRun) {
+        console.log(
+          `Company is INACTIVE -- dry-run, so NOT deleting our ${ownExistingUrls.size} job(s) ` +
+          `(would delete on a real run; validateAndGetCompany already skipped the CIF-wide delete)`
+        );
+      } else {
+        console.log("Company is INACTIVE — removing only our own jobs, skipping scrape.");
+        for (const url of ownExistingUrls) {
+          try { await deleteJobByUrl(url); } catch (e) { console.warn(`  delete failed: ${url} — ${e.message}`); }
+        }
       }
       return;
     }
@@ -515,7 +560,7 @@ async function main() {
     // keeping the company core in sync -- unlike staleJobDeletion below, this
     // is additive, not destructive. Only turn it off once you've verified
     // another scraper genuinely owns this CIF's company record.
-    if (scraperConfig.manageCompany) {
+    if (scraperConfig.manageCompany && !dryRun) {
       try {
         await upsertCompany({
           id: cif,
@@ -531,6 +576,8 @@ async function main() {
       } catch (err) {
         console.log(`Note: Could not upsert company: ${err.message}`);
       }
+    } else if (dryRun && scraperConfig.manageCompany) {
+      console.log(`dry-run -- would upsert company core for CIF ${cif}`);
     } else {
       console.log(
         "manageCompany=false — leaving company core untouched (explicitly disabled in " +
@@ -609,7 +656,9 @@ async function main() {
     console.log("Wrote docs/company.json (+ ownJobUrlPrefix)");
 
     console.log("\n=== Step 4: Upsert jobs to SOLR ===");
-    if (transformedPayload.jobs.length > 0) {
+    if (dryRun) {
+      console.log(`dry-run -- would upsert ${transformedPayload.jobs.length} jobs`);
+    } else if (transformedPayload.jobs.length > 0) {
       await upsertJobs(transformedPayload.jobs);
     } else {
       console.log("No jobs scraped — skipping upsert (API rejects an empty array)");
@@ -627,7 +676,7 @@ async function main() {
         for (const url of staleUrls) {
           try {
             console.log(`  Deleting: ${url}`);
-            await deleteJobByUrl(url);
+            if (!dryRun) await deleteJobByUrl(url);
           } catch (delErr) {
             console.warn(`  Failed to delete: ${url} — ${delErr.message}`);
           }
@@ -677,7 +726,7 @@ async function main() {
   }
 }
 
-export { mapToJobModel, transformJobsForSOLR, scrapeCareers, fetchSitemapJobUrls, parseListing, slugify, matchSitemapUrl, parseDeadline, dropDeadUrls };
+export { mapToJobModel, transformJobsForSOLR, scrapeCareers, fetchSitemapJobUrls, parseListing, slugify, matchSitemapUrl, matchSitemapUrlExact, parseDeadline, dropDeadUrls };
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main();

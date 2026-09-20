@@ -154,19 +154,57 @@ describe('company.js', () => {
       expect(typeof result.existingJobsCount).toBe('number');
     });
 
-    // the fixture company is active — testul inactive se rulează doar dacă firma e inactivă
-    if (EXAMPLE_ANAF_RECORD.inactive) {
-      it('should return inactive status when company is inactive', async () => {
-        const inactiveRecord = { ...EXAMPLE_ANAF_RECORD, inactive: true };
+    it('should return inactive status when company is inactive', async () => {
+      const inactiveRecord = { ...EXAMPLE_ANAF_RECORD, inactive: true };
 
-        mockFetch
-          .mockResolvedValueOnce(anafCompanyResponse(inactiveRecord))
-          .mockResolvedValueOnce(solrResponse(0, []));
+      mockFetch
+        .mockResolvedValueOnce(anafCompanyResponse(inactiveRecord))
+        .mockResolvedValueOnce(solrResponse(0, []))
+        .mockResolvedValueOnce(peviitorResponse([]));
 
-        const result = await company.validateAndGetCompany();
+      const result = await company.validateAndGetCompany();
 
-        expect(result).toHaveProperty('status', 'inactive');
-      });
-    }
+      expect(result).toHaveProperty('status', 'inactive');
+    });
+
+    it('deletes jobs by CIF when an inactive company still has jobs in SOLR', async () => {
+      const inactiveRecord = { ...EXAMPLE_ANAF_RECORD, inactive: true };
+
+      mockFetch
+        .mockResolvedValueOnce(anafCompanyResponse(inactiveRecord))
+        .mockResolvedValueOnce(solrResponse(3, [
+          { url: 'https://test.com/1', title: 'Job 1' },
+          { url: 'https://test.com/2', title: 'Job 2' },
+          { url: 'https://test.com/3', title: 'Job 3' }
+        ]))
+        .mockResolvedValueOnce(peviitorResponse([]))
+        .mockResolvedValueOnce({ ok: true, json: async () => ({ status: 'deleted' }) });
+
+      const result = await company.validateAndGetCompany();
+
+      expect(result.status).toBe('inactive');
+      expect(mockFetch).toHaveBeenCalledTimes(4);
+    });
+
+    // Regression: an inactive company with existing jobs always fired a real, CIF-wide
+    // deleteJobsByCIF, even under a plain --dry-run invocation, because dry_run never
+    // reached validateAndGetCompany. dry_run=true must skip that write entirely.
+    it('regression: dry_run=true must never call deleteJobsByCIF, even with jobs present', async () => {
+      const inactiveRecord = { ...EXAMPLE_ANAF_RECORD, inactive: true };
+
+      mockFetch
+        .mockResolvedValueOnce(anafCompanyResponse(inactiveRecord))
+        .mockResolvedValueOnce(solrResponse(3, [
+          { url: 'https://test.com/1', title: 'Job 1' },
+          { url: 'https://test.com/2', title: 'Job 2' },
+          { url: 'https://test.com/3', title: 'Job 3' }
+        ]))
+        .mockResolvedValueOnce(peviitorResponse([]));
+
+      const result = await company.validateAndGetCompany(true);
+
+      expect(result.status).toBe('inactive');
+      expect(mockFetch).toHaveBeenCalledTimes(3);
+    });
   });
 });
