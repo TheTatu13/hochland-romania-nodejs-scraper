@@ -21,6 +21,10 @@
 
 import fs from "fs";
 import { validateByContent } from "./job-validator.js";
+import scraperConfig from "./config/scraper.js";
+
+const OWN_URL_PREFIX = scraperConfig.ownJobUrlPrefix;
+const isOwnJob = (url) => typeof url === "string" && url.startsWith(OWN_URL_PREFIX);
 
 async function checkUrls(urls) {
   console.log(`=== Validating ${urls.length} URLs ===\n`);
@@ -91,14 +95,21 @@ async function loadUrlsFromFile(filePath) {
 
 async function deleteExpiredJobs(expiredJobs) {
   const { deleteJobByUrl } = await import("./api.js");
-  
-  console.log(`\nDeleting ${expiredJobs.length} expired jobs from SOLR...`);
-  
-  for (const job of expiredJobs) {
+
+  const ours = expiredJobs.filter((job) => isOwnJob(job.url));
+  const notOurs = expiredJobs.filter((job) => !isOwnJob(job.url));
+  if (notOurs.length > 0) {
+    console.log(`\n${notOurs.length} expired job(s) belong to another scraper on this CIF — never touched:`);
+    for (const job of notOurs) console.log(`  ${job.url}`);
+  }
+
+  console.log(`\nDeleting ${ours.length} expired jobs from SOLR...`);
+
+  for (const job of ours) {
     console.log(`Deleting: ${job.url}`);
     await deleteJobByUrl(job.url);
   }
-  
+
   console.log("Done.");
 }
 
