@@ -10,71 +10,71 @@
 | Location | JUD. MUREŞ, MUN. SIGHIŞOARA, STR. NICOLAE TITULESCU, NR.3A |
 | Website | [https://hochland.ro](https://hochland.ro) |
 | Careers | [https://hochland.ro/cariere/](https://hochland.ro/cariere/) |
-| Last Scraped | 2026-09-19 |
+| Last Scraped | 2026-09-20 |
 
 ## Current Job Listings (9)
 
-_Generated: 2026-09-19T20:39:57.844Z_
+_Generated: 2026-09-20T10:13:47.069Z_
 
 ### Primitor- Distribuitor
 
 - **URL:** [https://hochland.ro/cariere/primitor-distribuitor-2/](https://hochland.ro/cariere/primitor-distribuitor-2/)
 - **Work Mode:** on-site
-- **Location:** România
+- **Location:** Sighisoara
 - **Status:** scraped
 
 ### Primitor- Distribuitor
 
 - **URL:** [https://hochland.ro/cariere/primitor-distribuitor/](https://hochland.ro/cariere/primitor-distribuitor/)
 - **Work Mode:** on-site
-- **Location:** România
+- **Location:** Sovata
 - **Status:** scraped
 
 ### JUNIOR BRAND MANAGER
 
 - **URL:** [https://hochland.ro/cariere/junior-brand-manager/](https://hochland.ro/cariere/junior-brand-manager/)
 - **Work Mode:** on-site
-- **Location:** România
+- **Location:** Bucuresti
 - **Status:** scraped
 
 ### Coordonator Sănătate și Securitate în Muncă (SSM)
 
 - **URL:** [https://hochland.ro/cariere/coordonator-sanatate-si-securitate-in-munca-ssm/](https://hochland.ro/cariere/coordonator-sanatate-si-securitate-in-munca-ssm/)
 - **Work Mode:** on-site
-- **Location:** România
+- **Location:** Sighisoara
 - **Status:** scraped
 
 ### SENIOR CUSTOMER CARE OFFICER
 
 - **URL:** [https://hochland.ro/cariere/senior-customer-care-officer/](https://hochland.ro/cariere/senior-customer-care-officer/)
 - **Work Mode:** on-site
-- **Location:** România
+- **Location:** Bucuresti
 - **Status:** scraped
 
 ### Specialist Senior calitate si procese
 
 - **URL:** [https://hochland.ro/cariere/specialist-calitate-si-procese-senior/](https://hochland.ro/cariere/specialist-calitate-si-procese-senior/)
 - **Work Mode:** on-site
-- **Location:** România
+- **Location:** Sighisoara
 - **Status:** scraped
 
 ### Specialist Senior calitate si procese
 
 - **URL:** [https://hochland.ro/cariere/specialist-calitate-si-procese/](https://hochland.ro/cariere/specialist-calitate-si-procese/)
 - **Work Mode:** on-site
-- **Location:** România
+- **Location:** Sovata
 - **Status:** scraped
 
 ### Mecatronist
 
 - **URL:** [https://hochland.ro/cariere/electronist-mecatronist/](https://hochland.ro/cariere/electronist-mecatronist/)
 - **Work Mode:** on-site
-- **Location:** România
+- **Location:** Sighisoara
 - **Status:** scraped
 
 ### Mecatronist
 
 - **URL:** [https://hochland.ro/cariere/mecatronist/](https://hochland.ro/cariere/mecatronist/)
 - **Work Mode:** on-site
-- **Location:** România
+- **Location:** Sovata
 - **Status:** scraped
