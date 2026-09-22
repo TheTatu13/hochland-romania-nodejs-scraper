@@ -94,6 +94,16 @@ jobs:
           # upsertCompany/padCif), which is exactly what caused a real
           # company to show up duplicated in peviitor's search dropdown.
           CIF=$(printf '%08d' "$(jq -r '.id' scraper/config/company.json)")
+
+          # Hard guard: if CIF isn't exactly 8 digits after padding, abort
+          # loudly here instead of writing a malformed/duplicate company-core
+          # record (this class of bug duplicated Antibiotice/Aerostar/
+          # Turbomecanica/Cemacon in peviitor's search dropdown).
+          if ! [[ "$CIF" =~ ^[0-9]{8}$ ]]; then
+            echo "FAILED: computed CIF '${CIF}' is not exactly 8 digits (raw id: $(jq -r '.id' scraper/config/company.json)) -- aborting before any write."
+            exit 1
+          fi
+
           LEGAL_NAME=$(jq -r '.company' scraper/config/company.json)
           BRAND=$(jq -r '.brand' scraper/config/company.json)
           WEBSITE=$(jq -r '.website[0]' scraper/config/company.json)
@@ -119,10 +129,18 @@ jobs:
             -H "Content-Type: application/json" \
             --data-binary @company_data.json
 
-          FINAL=$(curl -s \
-            "https://api.peviitor.ro/v1/firme/company/?cif=${CIF}" | jq '.total')
-
-          echo "${BRAND} count after upsert: $FINAL"
+          # The API is eventually consistent -- an immediate re-query right
+          # after the PUT can still return 0 while the index catches up, so
+          # poll briefly instead of failing on the very first check.
+          FINAL=0
+          for i in 1 2 3 4 5; do
+            sleep 3
+            FINAL=$(curl -s "https://api.peviitor.ro/v1/firme/company/?cif=${CIF}" | jq '.total')
+            echo "${BRAND} count after upsert (attempt $i): $FINAL"
+            if [ "$FINAL" -ge "1" ]; then
+              break
+            fi
+          done
 
           if [ "$FINAL" -ge "1" ]; then
             echo "SUCCESS: ${BRAND} is in company core"
