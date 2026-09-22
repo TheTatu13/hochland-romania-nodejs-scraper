@@ -10,24 +10,31 @@
 | Location | JUD. MUREŞ, MUN. SIGHIŞOARA, STR. NICOLAE TITULESCU, NR.3A |
 | Website | [https://hochland.ro](https://hochland.ro) |
 | Careers | [https://hochland.ro/cariere/](https://hochland.ro/cariere/) |
-| Last Scraped | 2026-09-21 |
+| Last Scraped | 2026-09-22 |
 
-## Current Job Listings (9)
+## Current Job Listings (10)
 
-_Generated: 2026-09-21T11:20:36.242Z_
+_Generated: 2026-09-22T10:29:05.582Z_
+
+### Specialist IT
+
+- **URL:** [https://hochland.ro/cariere/specialist-it/](https://hochland.ro/cariere/specialist-it/)
+- **Work Mode:** on-site
+- **Location:** Sovata
+- **Status:** scraped
+
+### Specialist R&D Junior
+
+- **URL:** [https://hochland.ro/cariere/specialist-rd-junior/](https://hochland.ro/cariere/specialist-rd-junior/)
+- **Work Mode:** on-site
+- **Location:** Sovata
+- **Status:** scraped
 
 ### Primitor- Distribuitor
 
 - **URL:** [https://hochland.ro/cariere/primitor-distribuitor-2/](https://hochland.ro/cariere/primitor-distribuitor-2/)
 - **Work Mode:** on-site
 - **Location:** Sighisoara
-- **Status:** scraped
-
-### Primitor- Distribuitor
-
-- **URL:** [https://hochland.ro/cariere/primitor-distribuitor/](https://hochland.ro/cariere/primitor-distribuitor/)
-- **Work Mode:** on-site
-- **Location:** Sovata
 - **Status:** scraped
 
 ### JUNIOR BRAND MANAGER
