@@ -10,11 +10,11 @@
 | Location | JUD. MUREŞ, MUN. SIGHIŞOARA, STR. NICOLAE TITULESCU, NR.3A |
 | Website | [https://hochland.ro](https://hochland.ro) |
 | Careers | [https://hochland.ro/cariere/](https://hochland.ro/cariere/) |
-| Last Scraped | 2026-09-22 |
+| Last Scraped | 2026-09-23 |
 
 ## Current Job Listings (10)
 
-_Generated: 2026-09-22T10:29:05.582Z_
+_Generated: 2026-09-23T10:24:24.985Z_
 
 ### Specialist IT
 
