@@ -178,6 +178,14 @@ export async function getCompanyData() {
 // COMPANY VALIDATION WORKFLOW
 // ============================================================================
 
+/**
+ * @param {boolean} dryRun - when true, skips the CIF-wide delete below for an
+ * ANAF-inactive company. This function never had a dry-run path at all before
+ * -- callers had no way to safely check a company's status without risking a
+ * real, CIF-wide DELETE against peviitor's live API (deleteJobsByCIF removes
+ * every job under that CIF, including ones scraped by other, unrelated
+ * scrapers, not just this one's).
+ */
 export async function validateAndGetCompany(dryRun = false) {
   console.log("=== Step 1: Validate company via ANAF ===\n");
 
@@ -194,9 +202,10 @@ export async function validateAndGetCompany(dryRun = false) {
   try {
     // Peviitor's own search is an exact, case-sensitive match against the
     // legal name it already has stored (uppercase) -- querying with the
-    // brand ("Hochland") never matches, so this always silently returned
-    // no record, and every job/company write fell back to ANAF's freshly
-    // fetched name instead of whatever peviitor already had indexed.
+    // brand (e.g. "Hochland" against a stored "HOCHLAND ...") never
+    // matches, so this silently returned no record, and every job/company
+    // write below fell back to ANAF's freshly fetched name instead of
+    // whatever peviitor already had indexed.
     peviitorData = await getCompanyFromPeviitor(COMPANY_LEGAL_NAME.toUpperCase());
     console.log("Peviitor data fetched successfully");
   } catch (e) {
@@ -220,10 +229,7 @@ export async function validateAndGetCompany(dryRun = false) {
 
   if (!active) {
     if (dryRun) {
-      console.log(
-        `\n⚠️ Company is INACTIVE in ANAF -- dry-run, so NOT deleting the ${solrResult.numFound} ` +
-        `job(s) under this CIF (would run deleteJobsByCIF on a real run)`
-      );
+      console.log(`\n⚠️ Company is INACTIVE in ANAF -- dry-run, so NOT deleting the ${solrResult.numFound} job(s) under this CIF (would run deleteJobsByCIF on a real run)`);
     } else {
       console.log("\n⚠️ Company is INACTIVE in ANAF - deleting jobs from SOLR and stopping");
       if (solrResult.numFound > 0) {
