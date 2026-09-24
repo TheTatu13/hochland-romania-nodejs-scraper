@@ -1,4 +1,4 @@
-# HOCHLAND ROMÂNIA SRL
+# HOCHLAND ROMANIA SRL
 
 ## Company Info
 
@@ -14,7 +14,7 @@
 
 ## Current Job Listings (11)
 
-_Generated: 2026-09-24T10:40:44.088Z_
+_Generated: 2026-09-24T16:22:28.539Z_
 
 ### Specialist IT
 
