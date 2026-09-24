@@ -10,11 +10,11 @@
 | Location | JUD. MUREŞ, MUN. SIGHIŞOARA, STR. NICOLAE TITULESCU, NR.3A |
 | Website | [https://hochland.ro](https://hochland.ro) |
 | Careers | [https://hochland.ro/cariere/](https://hochland.ro/cariere/) |
-| Last Scraped | 2026-09-23 |
+| Last Scraped | 2026-09-24 |
 
-## Current Job Listings (10)
+## Current Job Listings (11)
 
-_Generated: 2026-09-23T10:24:24.985Z_
+_Generated: 2026-09-24T10:40:44.088Z_
 
 ### Specialist IT
 
@@ -33,6 +33,13 @@ _Generated: 2026-09-23T10:24:24.985Z_
 ### Primitor- Distribuitor
 
 - **URL:** [https://hochland.ro/cariere/primitor-distribuitor-2/](https://hochland.ro/cariere/primitor-distribuitor-2/)
+- **Work Mode:** on-site
+- **Location:** Sighisoara
+- **Status:** scraped
+
+### Muncitor necalificat- productie
+
+- **URL:** [https://hochland.ro/cariere/muncitor-necalificat-productie/](https://hochland.ro/cariere/muncitor-necalificat-productie/)
 - **Work Mode:** on-site
 - **Location:** Sighisoara
 - **Status:** scraped
