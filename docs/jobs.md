@@ -14,7 +14,7 @@
 
 ## Current Job Listings (9)
 
-_Generated: 2026-09-25T19:48:30.574Z_
+_Generated: 2026-09-25T19:50:53.526Z_
 
 ### Specialist IT
 
