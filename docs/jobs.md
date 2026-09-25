@@ -12,9 +12,9 @@
 | Careers | [https://hochland.ro/cariere/](https://hochland.ro/cariere/) |
 | Last Scraped | 2026-09-25 |
 
-## Current Job Listings (11)
+## Current Job Listings (9)
 
-_Generated: 2026-09-25T10:44:05.174Z_
+_Generated: 2026-09-25T19:48:30.574Z_
 
 ### Specialist IT
 
@@ -28,20 +28,6 @@ _Generated: 2026-09-25T10:44:05.174Z_
 - **URL:** [https://hochland.ro/cariere/specialist-rd-junior/](https://hochland.ro/cariere/specialist-rd-junior/)
 - **Work Mode:** on-site
 - **Location:** Sovata
-- **Status:** scraped
-
-### Primitor- Distribuitor
-
-- **URL:** [https://hochland.ro/cariere/primitor-distribuitor-2/](https://hochland.ro/cariere/primitor-distribuitor-2/)
-- **Work Mode:** on-site
-- **Location:** Sighisoara
-- **Status:** scraped
-
-### Muncitor necalificat- productie
-
-- **URL:** [https://hochland.ro/cariere/muncitor-necalificat-productie/](https://hochland.ro/cariere/muncitor-necalificat-productie/)
-- **Work Mode:** on-site
-- **Location:** Sighisoara
 - **Status:** scraped
 
 ### JUNIOR BRAND MANAGER
