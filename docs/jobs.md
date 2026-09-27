@@ -7,14 +7,14 @@
 | CIF | 10666988 |
 | Brand | Hochland |
 | Status | activ |
-| Location | Bucuresti |
+| Location | JUD. MUREŞ, MUN. SIGHIŞOARA, STR. NICOLAE TITULESCU, NR.3A |
 | Website | [https://hochland.ro](https://hochland.ro) |
 | Careers | [https://hochland.ro/cariere/](https://hochland.ro/cariere/) |
-| Last Scraped | 2026-09-26 |
+| Last Scraped | 2026-09-27 |
 
 ## Current Job Listings (9)
 
-_Generated: 2026-09-26T10:26:46.197Z_
+_Generated: 2026-09-27T10:57:32.815Z_
 
 ### Specialist IT
 
