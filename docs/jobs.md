@@ -10,11 +10,11 @@
 | Location | JUD. MUREŞ, MUN. SIGHIŞOARA, STR. NICOLAE TITULESCU, NR.3A |
 | Website | [https://hochland.ro](https://hochland.ro) |
 | Careers | [https://hochland.ro/cariere/](https://hochland.ro/cariere/) |
-| Last Scraped | 2026-09-27 |
+| Last Scraped | 2026-09-28 |
 
-## Current Job Listings (9)
+## Current Job Listings (8)
 
-_Generated: 2026-09-27T10:57:32.815Z_
+_Generated: 2026-09-28T12:13:51.657Z_
 
 ### Specialist IT
 
@@ -49,13 +49,6 @@ _Generated: 2026-09-27T10:57:32.815Z_
 - **URL:** [https://hochland.ro/cariere/senior-customer-care-officer/](https://hochland.ro/cariere/senior-customer-care-officer/)
 - **Work Mode:** on-site
 - **Location:** Bucuresti
-- **Status:** scraped
-
-### Specialist Senior calitate si procese
-
-- **URL:** [https://hochland.ro/cariere/specialist-calitate-si-procese-senior/](https://hochland.ro/cariere/specialist-calitate-si-procese-senior/)
-- **Work Mode:** on-site
-- **Location:** Sighisoara
 - **Status:** scraped
 
 ### Specialist Senior calitate si procese
