@@ -11,7 +11,7 @@ npm test
 
 ## Reporting Issues
 
-Open a [GitHub Issue](https://github.com/TheTatu13/hochland-romania-nodejs-scraper/issues) with:
+Open a [GitHub Issue](https://github.com/peviitor-scrapers/hochland-romania-nodejs-scraper/issues) with:
 - Clear description of the problem
 - Steps to reproduce
 - Expected vs actual behavior

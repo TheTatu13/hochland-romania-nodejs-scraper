@@ -6,6 +6,6 @@
   "location": ["Bucuresti"],
   "website": ["https://hochland.ro"],
   "career": ["https://hochland.ro/cariere/"],
-  "scraperFile": "https://github.com/TheTatu13/hochland-romania-nodejs-scraper/actions/workflows/scrape.yml",
+  "scraperFile": "https://github.com/peviitor-scrapers/hochland-romania-nodejs-scraper/actions/workflows/scrape.yml",
   "ownJobUrlPrefix": "https://hochland.ro/cariere/"
 }
